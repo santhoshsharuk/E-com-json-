@@ -1,48 +1,90 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Z3 Ecom Store</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; background-color: #f5f5f5; }
-    h1 { text-align: center; color: #333; }
-    .product-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
-    .product { background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden;
-               max-width: 320px; width: 100%; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; }
-    .product img { width: 100%; height: auto; border-radius: 5px; object-fit: cover; }
-    .product h3 { margin: 10px 0 5px; font-size: 20px; color: #222; }
-    .product p { margin: 5px 0; color: #555; }
-    .buy-btn { margin-top: 10px; background: #25D366; color: white; padding: 10px 20px; border: none; border-radius: 5px; text-decoration: none; font-weight: bold; display: inline-block; }
-    @media (max-width: 480px) { body { padding: 10px; } .product { max-width: 100%; } }
+    body { font-family: sans-serif; margin: 20px; }
+    .product { border: 1px solid #ccc; padding: 16px; border-radius: 8px; max-width: 400px; margin-bottom: 30px; }
+    .product img { width: 100%; border-radius: 8px; }
+    .select { margin: 10px 0; }
+    .btn { background: green; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; }
+    .price { font-size: 20px; margin: 10px 0; font-weight: bold; }
   </style>
 </head>
 <body>
 
-  <h1>Z3 E-Commerce Store</h1>
-  <div class="product-list" id="product-list"></div>
+  <div id="productContainer"></div>
 
   <script>
-    fetch('products.json')
-      .then(response => response.json())
-      .then(products => {
-        const container = document.getElementById("product-list");
-        products.forEach((product, index) => {
-          const item = document.createElement("div");
-          item.className = "product";
-          item.innerHTML = `
-            <img src="${product.image}" alt="${product.name}">
-            <h3>${product.name}</h3>
-            <p>₹${product.price}</p>
-            <p>${product.desc}</p>
-            <a class="buy-btn" href="https://wa.me/918110960489?text=${encodeURIComponent(
-              `Hi, I want to buy:\n${product.name}\nPrice: ₹${product.price}\n${product.desc}`
-            )}" target="_blank">Buy on WhatsApp</a>
-          `;
-          container.appendChild(item);
-        });
+    async function loadProducts() {
+      const res = await fetch('products.json');
+      const products = await res.json();
+
+      const container = document.getElementById('productContainer');
+
+      products.forEach(product => {
+        const sizeOptions = Object.entries(product.sizes).map(
+          ([size, price]) => `<option value="${size}">${size}</option>`
+        ).join('');
+
+        const colorOptions = product.colors.map(
+          color => `<option value="${color}">${color}</option>`
+        ).join('');
+
+        const defaultSize = Object.keys(product.sizes)[0];
+        const defaultPrice = product.sizes[defaultSize];
+
+        const html = `
+          <div class="product" id="product-${product.id}">
+            <img src="${product.image}" alt="${product.name}" />
+            <h2>${product.name}</h2>
+
+            <div class="select">
+              <label for="size-${product.id}">Select Size:</label>
+              <select id="size-${product.id}" onchange="updatePrice(${product.id})">
+                ${sizeOptions}
+              </select>
+            </div>
+
+            <div class="select">
+              <label for="color-${product.id}">Select Color:</label>
+              <select id="color-${product.id}">
+                ${colorOptions}
+              </select>
+            </div>
+
+            <div class="price" id="price-${product.id}">Price: ₹${defaultPrice}</div>
+
+            <button class="btn" onclick="orderNow(${product.id})">Confirm & Order</button>
+          </div>
+        `;
+
+        container.innerHTML += html;
       });
+
+      window.updatePrice = function(productId) {
+        const product = products.find(p => p.id === productId);
+        const size = document.getElementById(`size-${productId}`).value;
+        const price = product.sizes[size];
+        document.getElementById(`price-${productId}`).innerText = `Price: ₹${price}`;
+      };
+
+      window.orderNow = function(productId) {
+        const product = products.find(p => p.id === productId);
+        const size = document.getElementById(`size-${productId}`).value;
+        const color = document.getElementById(`color-${productId}`).value;
+        const price = product.sizes[size];
+        const msg = `Hi, I want to buy *${product.name}*\nSize: ${size}\nColor: ${color}\nPrice: ₹${price}\nPaying to GPay: santhoshsharuk16-1@okhdfcbank`;
+
+        const whatsappURL = `https://wa.me/918110960489?text=${encodeURIComponent(msg)}`;
+        window.location.href = whatsappURL;
+      };
+    }
+
+    loadProducts();
   </script>
+
 </body>
 </html>

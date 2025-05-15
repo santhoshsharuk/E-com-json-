@@ -1,21 +1,34 @@
-
 [
   {
-    "name": "T-Shirt",
-    "price": "499",
-    "desc": "High-quality cotton T-shirt",
-    "image": "images/tshirt.jpg"
+    "id": 1,
+    "name": "Stylish T-Shirt",
+    "image": "product1.jpg",
+    "sizes": {
+      "M": 499,
+      "L": 549,
+      "XL": 599
+    },
+    "colors": ["Red", "Black", "White"]
   },
   {
-    "name": "Wallet",
-    "price": "899",
-    "desc": "Leather wallet for men",
-    "image": "images/wallet.jpg"
+    "id": 2,
+    "name": "Denim Jacket",
+    "image": "product2.jpg",
+    "sizes": {
+      "S": 899,
+      "M": 999
+    },
+    "colors": ["Blue", "Dark Blue"]
   },
   {
-    "name": "Smart Watch",
-    "price": "1999",
-    "desc": "Fitness Smart Watch with heart rate monitor",
-    "image": "images/watch.jpg"
+    "id": 3,
+    "name": "Printed Hoodie",
+    "image": "product3.jpg",
+    "sizes": {
+      "L": 699,
+      "XL": 749
+    },
+    "colors": ["Black", "Grey"]
   }
 ]
+
