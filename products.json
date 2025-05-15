@@ -1,0 +1,21 @@
+
+[
+  {
+    "name": "T-Shirt",
+    "price": "499",
+    "desc": "High-quality cotton T-shirt",
+    "image": "images/tshirt.jpg"
+  },
+  {
+    "name": "Wallet",
+    "price": "899",
+    "desc": "Leather wallet for men",
+    "image": "images/wallet.jpg"
+  },
+  {
+    "name": "Smart Watch",
+    "price": "1999",
+    "desc": "Fitness Smart Watch with heart rate monitor",
+    "image": "images/watch.jpg"
+  }
+]
